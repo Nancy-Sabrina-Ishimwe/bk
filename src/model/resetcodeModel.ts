@@ -16,7 +16,7 @@ const resetCodeSchema = new Schema<IResetCode>(
     code: {
       type: String,
       required: true,
-      length: 6,      // Note: 'length' is not a standard Mongoose validator; use `validate` or `minlength`/`maxlength`
+      length: 6,      /
       unique: true,
     },
     user: {

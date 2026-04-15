@@ -1,14 +1,14 @@
 import express, { Router } from "express";
 import fileUpload from "../helper/multer";
 import authMiddleware from "../middleware/authMiddleware";
-import { 
-    createPost,
-    getPosts,
-    getOnePost,
-    getPostsByCategory,
-    updatePost,
-    deletePost,
-    getPostByTitle
+import {
+  createPost,
+  getPosts,
+  getOnePost,
+  getPostsByCategory,
+  updatePost,
+  deletePost,
+  getPostByTitle,
 } from "../controllers/blogs.controllers";
 
 const postRoutes: Router = express.Router();
