@@ -1,8 +1,8 @@
 // authMiddleware.ts
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import User from "../model/userMOdel";
-import { IUser } from "../model/userModel"; // assuming you exported IUser from user model
+import User from "../model/userModel";
+import { IUser } from "../model/userModel";
 
 // Extend Express Request type to include our custom 'User' property
 declare global {

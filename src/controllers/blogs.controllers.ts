@@ -1,7 +1,7 @@
 // blogs.controllers.ts
 import { Request, Response } from "express";
 import multer from "multer";
-import Posts from "../models/blogs.model";
+import Posts from "../model/blogs.model";
 import * as blogService from "../services/blogs.services";
 import { validateCreatepost, validateUpdatePost } from "../validations/blogs.validation";
 

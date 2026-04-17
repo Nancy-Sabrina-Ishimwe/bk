@@ -1,5 +1,5 @@
 // services/arts.services.ts
-import Arts, { IArts } from "../models/arts.model";
+import Arts, { IArt } from "../model/arts.model";
 import { uploadToCloud, CloudinaryResult } from "../helper/cloud";
 import { Types } from "mongoose";
 
@@ -16,7 +16,7 @@ export const createArts = async (
   productsData: ProductData,
   file?: Express.Multer.File,
   user?: string | Types.ObjectId
-): Promise<IArts> => {
+): Promise<IArt> => {
   let result: CloudinaryResult | undefined;
   if (file) result = await uploadToCloud(file);
   const { name, description, category, available_Products, price } = productsData;
@@ -39,12 +39,12 @@ export const createArts = async (
 };
 
 // Get all arts
-export const getAllArts = async (): Promise<IArts[]> => {
+export const getAllArts = async (): Promise<IArt[]> => {
   return await Arts.find();
 };
 
 // Get art by id
-export const getArtsById = async (id: string): Promise<IArts> => {
+export const getArtsById = async (id: string): Promise<IArt> => {
   const art = await Arts.findById(id).populate("owner", "name email profile");
   if (!art) {
     throw new Error("Product Id not found");
@@ -53,7 +53,7 @@ export const getArtsById = async (id: string): Promise<IArts> => {
 };
 
 // Get arts by category
-export const getArtsByCategory = async (category: string): Promise<IArts[]> => {
+export const getArtsByCategory = async (category: string): Promise<IArt[]> => {
   const arts = await Arts.find({ category });
   if (!arts || arts.length === 0) {
     throw new Error("Products category not found");
@@ -62,7 +62,7 @@ export const getArtsByCategory = async (category: string): Promise<IArts[]> => {
 };
 
 // Get art by name (title)
-export const getArtsByName = async (name: string): Promise<IArts> => {
+export const getArtsByName = async (name: string): Promise<IArt> => {
   const art = await Arts.findOne({ name }).populate("owner", "name email profile");
   if (!art) {
     throw new Error("Product name not found");
@@ -71,12 +71,12 @@ export const getArtsByName = async (name: string): Promise<IArts> => {
 };
 
 // Get arts by owner (any owner)
-export const getArtsByOwner = async (ownerId: string): Promise<IArts[]> => {
+export const getArtsByOwner = async (ownerId: string): Promise<IArt[]> => {
   return await Arts.find({ owner: ownerId });
 };
 
 // Get arts by logged-in user (owner from token)
-export const getArtsByLoggedUser = async (ownerId: string): Promise<IArts[]> => {
+export const getArtsByLoggedUser = async (ownerId: string): Promise<IArt[]> => {
   const owners = await Arts.find({ owner: ownerId });
   if (!owners || owners.length === 0) {
     throw new Error("Product Id not found");
@@ -90,7 +90,7 @@ export const updateArts = async (
   productsData: ProductData,
   file?: Express.Multer.File,
   user?: string | Types.ObjectId
-): Promise<IArts | null> => {
+): Promise<IArt | null> => {
   let result: CloudinaryResult | undefined;
   if (file) result = await uploadToCloud(file);
 
@@ -116,7 +116,7 @@ export const updateArts = async (
 };
 
 // Delete arts
-export const deleteArts = async (id: string): Promise<IArts | null> => {
+export const deleteArts = async (id: string): Promise<IArt | null> => {
   const existingArt = await Arts.findById(id);
   if (!existingArt) {
     throw new Error("Product Id not found");

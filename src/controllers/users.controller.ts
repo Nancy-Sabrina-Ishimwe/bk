@@ -1,16 +1,20 @@
 // users.controller.ts
 import { Request, Response } from "express";
 import * as UserService from "../services/users.services";
-import { sendEmailAdminApproveArts, sendEmailApproveArts, sendWelcomeEmailToAdmin } from "../Utils/emailTemplate";
+import {
+  sendEmailAdminApproveArts,
+  sendEmailApproveArts,
+  sendWelcomeEmailToAdmin,
+} from "../utils/emailTemplate";
 import generateToken from "../utils/generateToken";
-import { 
-  validateCreateUser, 
-  validateUpdateUser, 
-  validateForgotPassword, 
-  validateResetPassword, 
-  ValidateChangePassword 
+import {
+  validateCreateUser,
+  validateUpdateUser,
+  validateForgotPassword,
+  validateResetPassword,
+  ValidateChangePassword,
 } from "../validations/users.validation";
-import { IUser } from "../models/user.models"; // if you have exported IUser
+import { IUser } from "../model/userModel"; // if you have exported IUser
 
 // Helper type for request with file (from multer)
 interface MulterRequest extends Request {
@@ -18,7 +22,10 @@ interface MulterRequest extends Request {
 }
 
 // getAllUsers controller
-export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
+export const getAllUsers = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const users = await UserService.findAllUsers();
     res.status(200).json({
@@ -36,7 +43,10 @@ export const getAllUsers = async (req: Request, res: Response): Promise<void> =>
 };
 
 // getOneUser controller
-export const getOneUser = async (req: Request, res: Response): Promise<void> => {
+export const getOneUser = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const { id } = req.params;
     const user = await UserService.findUserById(id);
@@ -62,7 +72,10 @@ export const getOneUser = async (req: Request, res: Response): Promise<void> => 
 };
 
 // createUser controller
-export const createUser = async (req: MulterRequest, res: Response): Promise<void> => {
+export const createUser = async (
+  req: MulterRequest,
+  res: Response,
+): Promise<void> => {
   const { error, value } = validateCreateUser(req.body);
   if (error) {
     res.status(400).json({ message: error.details[0].message });
@@ -85,7 +98,10 @@ export const createUser = async (req: MulterRequest, res: Response): Promise<voi
 };
 
 // updateUser controller
-export const updateUser = async (req: MulterRequest, res: Response): Promise<void> => {
+export const updateUser = async (
+  req: MulterRequest,
+  res: Response,
+): Promise<void> => {
   const { error, value } = validateUpdateUser(req.body);
   if (error) {
     res.status(400).json({ message: error.details[0].message });
@@ -108,7 +124,10 @@ export const updateUser = async (req: MulterRequest, res: Response): Promise<voi
 };
 
 // Approve status change (artist approval)
-export const approveStatus = async (req: Request, res: Response): Promise<void> => {
+export const approveStatus = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const { id } = req.params;
     const user = await UserService.approveStatusChange(id);
@@ -128,7 +147,10 @@ export const approveStatus = async (req: Request, res: Response): Promise<void> 
 };
 
 // Cancel artist request
-export const cancelArtistRequest = async (req: Request, res: Response): Promise<void> => {
+export const cancelArtistRequest = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const { id } = req.params;
     const user = await UserService.cancelArtistRequest(id);
@@ -148,7 +170,10 @@ export const cancelArtistRequest = async (req: Request, res: Response): Promise<
 };
 
 // Approve admin status change
-export const approveAdminStatus = async (req: Request, res: Response): Promise<void> => {
+export const approveAdminStatus = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const { id } = req.params;
     const user = await UserService.approveAdminStatusChange(id);
@@ -168,7 +193,10 @@ export const approveAdminStatus = async (req: Request, res: Response): Promise<v
 };
 
 // deleteUser controller
-export const deleteUser = async (req: Request, res: Response): Promise<void> => {
+export const deleteUser = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const { id } = req.params;
     await UserService.deleteUserById(id);
@@ -212,7 +240,10 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 };
 
 // forgot password controller
-export const forgotPassword = async (req: Request, res: Response): Promise<void> => {
+export const forgotPassword = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const { error, value } = validateForgotPassword(req.body);
     if (error) {
@@ -220,7 +251,9 @@ export const forgotPassword = async (req: Request, res: Response): Promise<void>
       return;
     }
     await UserService.forgotPasswordService(value.email);
-    res.status(200).json({ message: "We sent you Code to reset password on your email" });
+    res
+      .status(200)
+      .json({ message: "We sent you Code to reset password on your email" });
   } catch (error: any) {
     res.status(500).json({
       status: "500",
@@ -231,14 +264,21 @@ export const forgotPassword = async (req: Request, res: Response): Promise<void>
 };
 
 // reset password controller
-export const resetPassword = async (req: Request, res: Response): Promise<void> => {
+export const resetPassword = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const { error, value } = validateResetPassword(req.body);
     if (error) {
       res.status(400).json({ message: error.details[0].message });
       return;
     }
-    await UserService.resetPasswordService(value.code, value.password, value.confirmPassword);
+    await UserService.resetPasswordService(
+      value.code,
+      value.password,
+      value.confirmPassword,
+    );
     res.status(200).json({
       status: "200",
       message: "Password changed!.. you can now login with new password",
@@ -253,7 +293,10 @@ export const resetPassword = async (req: Request, res: Response): Promise<void> 
 };
 
 // controller to change password
-export const changePassword = async (req: Request, res: Response): Promise<void> => {
+export const changePassword = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const { id } = req.params;
     const { error, value } = ValidateChangePassword(req.body);

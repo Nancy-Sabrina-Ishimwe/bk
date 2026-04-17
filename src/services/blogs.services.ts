@@ -1,5 +1,5 @@
 // services/blogs.services.ts
-import Posts, { IPost } from "../models/blogs.model";
+import Posts, { IPost } from "../model/blogs.model";
 import { uploadToCloud, CloudinaryResult } from "../helper/cloud";
 import { Types } from "mongoose";
 

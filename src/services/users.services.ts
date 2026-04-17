@@ -3,7 +3,7 @@ import User, { IUser } from "../model/userModel";
 import bcrypt from "bcrypt";
 import { uploadToCloud, CloudinaryResult } from "../helper/cloud";
 import { sendResetEmail } from "../utils/emailTemplate";
-import Code, { IResetCode } from "../model/resetCodeModel";
+import Code, { IResetCode } from "../model/resetcodeModel";
 import { Types } from "mongoose";
 
 // Types for function parameters

@@ -10,11 +10,11 @@ interface OrderDetails {
 export const sendWelcomeEmailToAdmin = (email: string, name: string): void => {
   const emailTemplate = {
     emailTo: email,
-    subject: "Welcome Aboard - Gb Group Kingdom Team!",
+    subject: "Welcome Aboard - Team!",
     message: `
       <h1>Welcome, ${name}!</h1>
       <p>
-        Thank you for joining the Gb Group Kingdom team! We are thrilled to have you onboard as we continue to enhance our services. We look forward to exciting collaborations and impactful work.
+        Thank you for joining the  team! We are thrilled to have you onboard as we continue to enhance our services. We look forward to exciting collaborations and impactful work.
       </p>
       <p>
         Best regards,<br/>

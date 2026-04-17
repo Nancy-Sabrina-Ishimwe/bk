@@ -1,7 +1,7 @@
 // order.controller.ts
 import { Request, Response } from "express";
 import * as orderService from "../services/order.services";
-import { sendEmailPersonBookedArts } from "../Utils/emailTemplate";
+import { sendEmailPersonBookedArts } from "../utils/emailTemplate";
 
 // Extend Express Request type to include User (already defined in authMiddleware)
 // If not globally available, you can redeclare:
