@@ -3,8 +3,8 @@ import { Request, Response } from "express";
 import * as artsService from "../services/arts.services";
 import { validateArt } from "../validations/arts.validation";
 
-// Extend Request to include User (from authMiddleware) and file (from multer)
-interface AuthRequest extends Request {
+
+export type AuthRequest = Request & {
   User?: {
     _id: string;
     email?: string;
@@ -12,7 +12,7 @@ interface AuthRequest extends Request {
     [key: string]: any;
   };
   file?: Express.Multer.File;
-}
+};
 
 export const createArts = async (req: AuthRequest, res: Response): Promise<void> => {
   const { error, value } = validateArt(req.body);

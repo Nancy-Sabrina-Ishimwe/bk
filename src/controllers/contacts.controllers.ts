@@ -1,6 +1,6 @@
 // contacts.controllers.ts
 import { Request, Response } from "express";
-import Contact from "../models/contacts.model";
+import Contact from "../model/contacts.model";
 import * as messageService from "../services/contacts.services";
 import { validateCreateMessage } from "../validations/contacts.validation";
 
