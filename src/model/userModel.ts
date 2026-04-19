@@ -1,4 +1,17 @@
-import mongoose, { Schema, Document, Model, Types } from "mongoose";
+import mongoose, { Schema, Document } from 'mongoose';
+
+export enum UserRole {
+  ADMIN = 'Admin',
+  TECH = 'Tech',
+  USER = 'User',
+}
+
+export enum UserStatus {
+  PENDING = 'pending',
+  APPROVED = 'approved',
+  CANCELED = 'canceled',
+  REJECTED = 'rejected',
+}
 
 export interface IUser extends Document {
   fname: string;
@@ -8,17 +21,19 @@ export interface IUser extends Document {
   skills: string[];
   rating?: number;
   email: string;
-  img?: string;
-  password?: string;
+  img: string;
+  password: string;
   phone?: string;
   identity?: string;
   province?: string;
   district?: string;
   sector?: string;
   street?: string;
-  status?: "pending" | "approved" | "rejected";
-  role: "Admin" | "Tech" | "User";
-  isAdmin?: boolean;
+  status: UserStatus;
+  role: UserRole;
+  isAdmin: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const userSchema = new Schema<IUser>(
@@ -29,42 +44,31 @@ const userSchema = new Schema<IUser>(
     history: [{ type: String }],
     skills: [{ type: String }],
     rating: { type: Number },
-
     email: { type: String, required: true, unique: true },
-
     img: {
       type: String,
-      default:
-        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+      default: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
     },
-
-    password: { type: String },
+    password: { type: String, required: true },
     phone: { type: String },
     identity: { type: String },
-
     province: String,
     district: String,
     sector: String,
     street: String,
-
     status: {
       type: String,
-      default: "pending",
-      enum: ["pending", "approved", "rejected"],
+      default: UserStatus.PENDING,
+      enum: Object.values(UserStatus),
     },
-
     role: {
       type: String,
-      enum: ["Admin", "Tech", "User"],
-      default: "User",
+      enum: Object.values(UserRole),
+      default: UserRole.USER,
     },
-
     isAdmin: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
 
-const User: Model<IUser> =
-  mongoose.models.User || mongoose.model<IUser>("User", userSchema);
-
-export default User;
+export const User = mongoose.model<IUser>('User', userSchema);

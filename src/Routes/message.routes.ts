@@ -1,20 +1,20 @@
-import { Router } from "express";
-import authMiddleware from "../middleware/authMiddleware";
-import {
-  createMessage,
-  getMessages,
-  getOneMessage,
-  deleteMessage,
-} from "../controllers/contacts.controllers";
+// import { Router } from "express";
+// import authMiddleware from "../middleware/authMiddleware";
+// import {
+//   createMessage,
+//   getMessages,
+//   getOneMessage,
+//   deleteMessage,
+// } from "../controllers/contacts.controllers";
 
-const router = Router();
+// const router = Router();
 
-router.get("/", authMiddleware, getMessages);
+// router.get("/", authMiddleware, getMessages);
 
-router.get("/:id", authMiddleware, getOneMessage);
+// router.get("/:id", authMiddleware, getOneMessage);
 
-router.post("/", createMessage);
+// router.post("/", createMessage);
 
-router.delete("/:id", authMiddleware, deleteMessage);
+// router.delete("/:id", authMiddleware, deleteMessage);
 
-export default router;
+// export default router;

@@ -18,7 +18,7 @@ export const sendWelcomeEmailToAdmin = (email: string, name: string): void => {
       </p>
       <p>
         Best regards,<br/>
-        The Gb Group Kingdom Team
+        The the market
       </p>
     `,
   };
