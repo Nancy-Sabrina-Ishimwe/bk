@@ -177,7 +177,7 @@ export const changePassword = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { error, value } = validateChangePassword(req.body);
     if (error) throw new AppError(error.details[0].message, 400);
-    const userId = (req as any).user.id; // Assuming authMiddleware sets req.user
+    const userId = (req as any).user.id;
     await userService.changePassword(userId, value);
     res.status(200).json({ status: '200', message: 'Password updated successfully' });
   }
