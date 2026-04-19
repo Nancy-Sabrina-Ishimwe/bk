@@ -1,45 +1,28 @@
-import mongoose, { Model, Schema, Document } from 'mongoose'
+import mongoose, { Schema, Document, Model, Types } from "mongoose";
 
-// Define the interface for the Post document
 export interface IPost extends Document {
-  title: string
-  description: string
-  category?: string
-  image?: string
-  creator?: mongoose.Types.ObjectId
-  createdAt?: Date
-  updatedAt?: Date
+  title: string;
+  description: string;
+  category?: string;
+  image?: string;
+  creator?: Types.ObjectId;
 }
 
-// Define the schema with types
 const postSchema = new Schema<IPost>(
   {
-    title: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    description: {
-      type: String,
-      required: true,
-    },
-    category: {
-      type: String,
-    },
-    image: {
-      type: String,
-    },
+    title: { type: String, required: true, unique: true },
+    description: { type: String, required: true },
+    category: String,
+    image: String,
     creator: {
       type: Schema.Types.ObjectId,
-      ref: 'users',
+      ref: "User",
     },
   },
-  {
-    timestamps: true,
-  }
-)
+  { timestamps: true }
+);
 
-// Create or retrieve the model with proper typing
-const Posts: Model<IPost> = mongoose.models.posts || mongoose.model<IPost>('posts', postSchema)
+const Post: Model<IPost> =
+  mongoose.models.Post || mongoose.model<IPost>("Post", postSchema);
 
-export default Posts
+export default Post;

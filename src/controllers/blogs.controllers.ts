@@ -3,9 +3,25 @@ import { Request, Response } from "express";
 import multer from "multer";
 import Posts from "../model/blogs.model";
 import * as blogService from "../services/blogs.services";
-import { validateCreatepost, validateUpdatePost } from "../validations/blogs.validation";
+import {
+  validateCreatepost,
+  validateUpdatePost,
+} from "../validations/blogs.validation";
 
-// Extend Request to include User (from authMiddleware) and file (from multer)
+// ✅ Define proper input type (shared with service ideally)
+interface CreatePostInput {
+  title: string;
+  content: string;
+  category?: string;
+}
+
+interface UpdatePostInput {
+  title?: string;
+  content?: string;
+  category?: string;
+}
+
+// ✅ Extend Request
 interface AuthRequest extends Request {
   User?: {
     _id: string;
@@ -16,18 +32,26 @@ interface AuthRequest extends Request {
   file?: Express.Multer.File;
 }
 
-// controller to create a post
-export const createPost = async (req: AuthRequest, res: Response): Promise<void> => {
+// ================= CREATE POST =================
+export const createPost = async (
+  req: AuthRequest,
+  res: Response
+): Promise<void> => {
   const { error, value } = validateCreatepost(req.body);
+
   if (error) {
     res.status(400).json({
       message: error.details[0].message,
     });
     return;
   }
+
+  // ✅ Cast AFTER validation (safe)
+  const validatedData = value as CreatePostInput;
+
   try {
-    // checking if post already exists
-    const { title } = req.body;
+    const { title } = validatedData;
+
     const postExist = await Posts.findOne({ title });
 
     if (postExist) {
@@ -39,10 +63,11 @@ export const createPost = async (req: AuthRequest, res: Response): Promise<void>
     }
 
     const createdPost = await blogService.createPost(
-      value,
+      validatedData,
       req.file,
       req.User?._id
     );
+
     res.status(201).json({
       status: "201",
       message: "Post created successfully",
@@ -58,10 +83,14 @@ export const createPost = async (req: AuthRequest, res: Response): Promise<void>
   }
 };
 
-// controller to retrieve all posts
-export const getPosts = async (req: Request, res: Response): Promise<void> => {
+// ================= GET ALL POSTS =================
+export const getPosts = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const posts = await blogService.getPost();
+
     res.status(200).json({
       status: "200",
       message: "Posts are retrieved successfully",
@@ -77,10 +106,14 @@ export const getPosts = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// controller to retrieve single post by id
-export const getOnePost = async (req: Request, res: Response): Promise<void> => {
+// ================= GET ONE POST =================
+export const getOnePost = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { postId } = req.params;
+
     const post = await blogService.getOnePost(postId);
 
     if (!post) {
@@ -105,18 +138,27 @@ export const getOnePost = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
-// controller to update post by id
-export const updatePost = async (req: AuthRequest, res: Response): Promise<void> => {
+// ================= UPDATE POST =================
+export const updatePost = async (
+  req: AuthRequest,
+  res: Response
+): Promise<void> => {
   const { error, value } = validateUpdatePost(req.body);
+
   if (error) {
     res.status(400).json({
       message: error.details[0].message,
     });
     return;
   }
+
+  const validatedData = value as UpdatePostInput;
+
   try {
     const { id } = req.params;
+
     const findId = await Posts.findById(id);
+
     if (!findId) {
       res.status(404).json({
         status: "404",
@@ -124,14 +166,16 @@ export const updatePost = async (req: AuthRequest, res: Response): Promise<void>
       });
       return;
     }
+
     await blogService.updatePost(
       id,
-      value,
+      validatedData,
       req.file,
       req.User?._id
     );
-    res.status(201).json({
-      status: "201",
+
+    res.status(200).json({
+      status: "200",
       message: "Post Data Updated",
     });
   } catch (error: any) {
@@ -143,11 +187,16 @@ export const updatePost = async (req: AuthRequest, res: Response): Promise<void>
   }
 };
 
-// controller to delete a post
-export const deletePost = async (req: Request, res: Response): Promise<void> => {
+// ================= DELETE POST =================
+export const deletePost = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { id } = req.params;
+
     const findId = await Posts.findById(id);
+
     if (!findId) {
       res.status(404).json({
         status: "404",
@@ -155,7 +204,9 @@ export const deletePost = async (req: Request, res: Response): Promise<void> => 
       });
       return;
     }
+
     await blogService.deletePost(id);
+
     res.status(200).json({
       status: "200",
       message: "Post deleted successfully",
@@ -169,30 +220,40 @@ export const deletePost = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
-// get posts by category
-export const getPostsByCategory = async (req: Request, res: Response): Promise<void> => {
+// ================= GET POSTS BY CATEGORY =================
+export const getPostsByCategory = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { category } = req.params;
+
     const posts = await blogService.getPostsByCategory(category);
+
     res.status(200).json({
       status: 200,
-      message: "Posts based category retrieved",
+      message: "Posts based on category retrieved",
       data: posts,
     });
   } catch (error: any) {
     res.status(500).json({
       status: 500,
-      message: "Failed to get art by posts",
+      message: "Failed to get posts by category",
       error: error.message,
     });
   }
 };
 
-// get post by title
-export const getPostByTitle = async (req: Request, res: Response): Promise<void> => {
+// ================= GET POST BY TITLE =================
+export const getPostByTitle = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { title } = req.params;
+
     const post = await blogService.getPostByTitle(title);
+
     res.status(200).json({
       status: 200,
       data: post,

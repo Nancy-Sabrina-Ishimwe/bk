@@ -1,4 +1,5 @@
-import express, { Router } from "express";
+import { Router } from "express";
+import authMiddleware from "../middleware/authMiddleware";
 import {
   addItem,
   completeCart,
@@ -7,26 +8,19 @@ import {
   removeItem,
   updateItem,
 } from "../controllers/cart.controller";
-import authMiddleware from "../middleware/authMiddleware";
-import fileUpload from "../helper/multer";
 
-const cartRouter: Router = express.Router();
+const router = Router();
 
-cartRouter.get("/", authMiddleware, getCart);
-cartRouter.post(
-  "/:productId/add",
-  authMiddleware,
-  fileUpload.single("files"),
-  addItem,
-);
-cartRouter.put(
-  "/:productId/update",
-  authMiddleware,
-  fileUpload.single("files"),
-  updateItem,
-);
-cartRouter.delete("/:productId/remove", authMiddleware, removeItem);
-cartRouter.delete("/complete", authMiddleware, completeCart);
-cartRouter.delete("/:id", authMiddleware, deleteCart);
+router.get("/", authMiddleware, getCart);
 
-export default cartRouter;
+router.post("/:productId", authMiddleware, addItem);
+
+router.put("/:productId", authMiddleware, updateItem);
+
+router.delete("/:productId", authMiddleware, removeItem);
+
+router.delete("/clear", authMiddleware, deleteCart);
+
+router.post("/checkout", authMiddleware, completeCart);
+
+export default router;

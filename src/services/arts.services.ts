@@ -1,5 +1,5 @@
 // services/arts.services.ts
-import Arts, { IArt } from "../model/arts.model";
+import Arts, { IArt } from "../model/product.model";
 import { uploadToCloud, CloudinaryResult } from "../helper/cloud";
 import { Types } from "mongoose";
 

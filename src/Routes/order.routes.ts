@@ -1,6 +1,5 @@
-import express, { Router } from "express";
+import { Router } from "express";
 import authMiddleware from "../middleware/authMiddleware";
-import fileUpload from "../helper/multer";
 import {
   checkoutOrder,
   getOrdersByUser,
@@ -10,19 +9,22 @@ import {
   getAllCustomer,
 } from "../controllers/order.controller";
 
-const orderRouter: Router = express.Router();
+const router = Router();
 
-// Route for checkout
-orderRouter.post(
-  "/:cartId",
-  authMiddleware,
-  fileUpload.single("files"),
-  checkoutOrder,
-);
-orderRouter.get("/owner", authMiddleware, getOrdersByUser);
-orderRouter.get("/artsOwner", authMiddleware, getOrdersByOwner);
-orderRouter.get("/customer", authMiddleware, getAllCustomer);
-orderRouter.get("/", authMiddleware, getOrders);
-orderRouter.get("/:orderId:", authMiddleware, getOrderById); // Note: double colon? Might be a typo
+// CREATE ORDER
+router.post("/", authMiddleware, checkoutOrder);
 
-export default orderRouter;
+// USER ORDERS
+router.get("/me", authMiddleware, getOrdersByUser);
+
+// SELLER ORDERS
+router.get("/seller", authMiddleware, getOrdersByOwner);
+
+// ADMIN
+router.get("/customers", authMiddleware, getAllCustomer);
+router.get("/", authMiddleware, getOrders);
+
+// SINGLE ORDER
+router.get("/:id", authMiddleware, getOrderById);
+
+export default router;

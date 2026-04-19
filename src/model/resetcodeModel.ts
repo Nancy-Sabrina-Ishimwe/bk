@@ -1,42 +1,34 @@
-// resetCodeModel.ts
-import mongoose, { Model, Schema, Document, Types } from "mongoose";
+import mongoose, { Schema, Document, Model, Types } from "mongoose";
 
-// 1. Define interface for the ResetCode document
 export interface IResetCode extends Document {
-  code: string;                // 6-digit code
-  user: Types.ObjectId;        // reference to User model
-  expireAt: Date;              // with TTL index (expires after 15 minutes)
-  createdAt?: Date;
-  updatedAt?: Date;
+  code: string;
+  user: Types.ObjectId;
+  expireAt: Date;
 }
 
-// 2. Create the schema
 const resetCodeSchema = new Schema<IResetCode>(
   {
     code: {
       type: String,
       required: true,
-      length: 6,      /
-      unique: true,
+      length: 6,
     },
     user: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
-      required: true, // Usually a reset code must belong to a user
+      required: true,
     },
     expireAt: {
       type: Date,
       default: Date.now,
-      index: { expires: "15m" }, // TTL index: document auto-removed after 15 minutes
+      index: { expires: "15m" },
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
+const ResetCode: Model<IResetCode> =
+  mongoose.models.ResetCode ||
+  mongoose.model<IResetCode>("ResetCode", resetCodeSchema);
 
-const Code: Model<IResetCode> =
-  mongoose.models.resetCode || mongoose.model<IResetCode>("resetCode", resetCodeSchema);
-
-export default Code;
+export default ResetCode;
